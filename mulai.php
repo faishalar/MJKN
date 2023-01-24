@@ -222,7 +222,11 @@ while ($data = mysqli_fetch_assoc($peserta)) {
       $nilairespon2  = $data2["metadata"]["code"];
       $nilairespon3  = $data2["metadata"]["message"];
       $hasilakhir2    = decompress(stringDecrypt($kunci2, $nilairespon2));
-      echo "<script>console.log('JKN KE UMUM : " . $nilairespon2 . " : " . $nilairespon3 . "');</script>";
+      if($nilairespon2 == "200"){
+        echo "<script>console.log('JKN KE UMUM : " . $nilairespon2 . " : " . $nilairespon3 . "');</script>";
+      }else{
+        echo "<script>console.log('Terdapat Duplikasi Input JKN');</script>";
+      }
     }
   } else {
     //NON JKN
@@ -285,8 +289,11 @@ while ($data = mysqli_fetch_assoc($peserta)) {
     $nilairespon4  = $data3["metadata"]["code"];
     $nilairespon5  = $data3["metadata"]["message"];
     $hasilakhir3    = decompress(stringDecrypt($kunci3, $nilairespon4));
-
-    echo "<script>console.log('NON JKN : " . $nilairespon4 . " : " . $nilairespon5 . "');</script>";
+    if($nilairespon4 == "200"){
+      echo "<script>console.log('NON JKN : " . $nilairespon4 . " : " . $nilairespon5 . "');</script>";     
+    }else{
+      echo "<script>console.log('Terdapat Duplikasi Input NON JKN');</script>";
+    }
   }
 }
 
