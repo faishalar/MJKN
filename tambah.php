@@ -62,5 +62,5 @@ function tampil($queri)
   global $koneksi;
   $data = mysqli_query($koneksi, $queri);
   $tampil = mysqli_fetch_assoc($queri);
-  return $tampi;
+  return $tampil;
 }
