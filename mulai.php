@@ -199,7 +199,7 @@ while ($data = mysqli_fetch_assoc($peserta)) {
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         CURLOPT_CUSTOMREQUEST => 'POST',
         CURLOPT_POSTFIELDS => '{
-            "kodebooking": "' . $Booking . '",
+            "kodebooking": "' . $kodeBooking . '",
             "jenispasien": "NON JKN",
             "nomorkartu": "-",
             "nik": "-",
@@ -248,6 +248,36 @@ while ($data = mysqli_fetch_assoc($peserta)) {
       $hasilakhir2    = decompress(stringDecrypt($kunci2, $nilairespon2));
       if($nilairespon2 == "200"){
         echo "<script>console.log('JKN KE UMUM : " . $nilairespon2 . " : " . $nilairespon3 . "');</script>";
+        $tugas3 = tampil("SELECT dikirim FROM mutasi_berkas WHERE dikirim LIKE '" . $tanggal . " %' AND no_rawat= '".$Booking."'");
+        if (!empty($tugas3)) {
+          $waktuTugas3 = strtotime($tugas3["dikirim"]);
+          task($kodeBooking, "3",$waktuTugas3);
+        }
+        $tugas4 = tampil("SELECT diterima FROM mutasi_berkas WHERE diterima LIKE '" . $tanggal . " %' AND no_rawat= '".$Booking."'");
+        if (!empty($tugas4)) {
+          $waktuTugas4 = strtotime($tugas4["diterima"]);
+          task($kodeBooking, "4",$waktuTugas4);
+        }
+        $tugas5 = tampil("SELECT CONCAT (tgl_perawatan,' ',jam_rawat) AS waktu FROM pemeriksaan_ralan WHERE no_rawat= '".$Booking."'");
+        if (!empty($tugas5)) {
+          $waktuTugas5 = strtotime($tugas5["waktu"]);
+          task($kodeBooking, "5",$waktuTugas5);
+        }
+        $tugas6 = tampil("SELECT CONCAT (tgl_peresepan,' ',jam_peresepan) AS waktu FROM resep_obat WHERE no_rawat= '".$Booking."'");
+        if (!empty($tugas6)) {
+          $waktuTugas6 = strtotime($tugas6["waktu"]);
+          task($kodeBooking, "6",$waktuTugas6);
+        }
+        $tugas7 = tampil("SELECT CONCAT (tgl_perawatan,' ',jam) AS waktu FROM resep_obat WHERE no_rawat= '".$Booking."'");
+        if (!empty($tugas7)) {
+          $waktuTugas7 = strtotime($tugas7["waktu"]);
+          task($kodeBooking, "7",$waktuTugas7);
+        }
+        $tugas99 = tampil("SELECT NOW() AS waktu FROM reg_periksa WHERE stts='Batal' AND no_rawat= '".$Booking."'");
+        if (!empty($tugas99)) {
+          $waktuTugas99 = strtotime($tugas99["waktu"]);
+          task($kodeBooking, "99",$waktuTugas99);
+        }        
       }else{
         echo "<script>console.log('Terdapat Duplikasi Input JKN');</script>";
       }
@@ -266,7 +296,7 @@ while ($data = mysqli_fetch_assoc($peserta)) {
       CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
       CURLOPT_CUSTOMREQUEST => 'POST',
       CURLOPT_POSTFIELDS => '{
-         "kodebooking": "' . $Booking . '",
+         "kodebooking": "' . $kodeBooking . '",
          "jenispasien": "NON JKN",
          "nomorkartu": "-",
          "nik": "-",
@@ -315,6 +345,36 @@ while ($data = mysqli_fetch_assoc($peserta)) {
     $hasilakhir3    = decompress(stringDecrypt($kunci3, $nilairespon4));
     if($nilairespon4 == "200"){
       echo "<script>console.log('NON JKN : " . $nilairespon4 . " : " . $nilairespon5 . "');</script>";     
+      $tugas3 = tampil("SELECT dikirim FROM mutasi_berkas WHERE dikirim LIKE '" . $tanggal . " %' AND no_rawat= '".$Booking."'");
+      if (!empty($tugas3)) {
+        $waktuTugas3 = strtotime($tugas3["dikirim"]);
+        task($kodeBooking, "3",$waktuTugas3);
+      }
+      $tugas4 = tampil("SELECT diterima FROM mutasi_berkas WHERE diterima LIKE '" . $tanggal . " %' AND no_rawat= '".$Booking."'");
+      if (!empty($tugas4)) {
+        $waktuTugas4 = strtotime($tugas4["diterima"]);
+        task($kodeBooking, "4",$waktuTugas4);
+      }
+      $tugas5 = tampil("SELECT CONCAT (tgl_perawatan,' ',jam_rawat) AS waktu FROM pemeriksaan_ralan WHERE no_rawat= '".$Booking."'");
+      if (!empty($tugas5)) {
+        $waktuTugas5 = strtotime($tugas5["waktu"]);
+        task($kodeBooking, "5",$waktuTugas5);
+      }
+      $tugas6 = tampil("SELECT CONCAT (tgl_peresepan,' ',jam_peresepan) AS waktu FROM resep_obat WHERE no_rawat= '".$Booking."'");
+      if (!empty($tugas6)) {
+        $waktuTugas6 = strtotime($tugas6["waktu"]);
+        task($kodeBooking, "6",$waktuTugas6);
+      }
+      $tugas7 = tampil("SELECT CONCAT (tgl_perawatan,' ',jam) AS waktu FROM resep_obat WHERE no_rawat= '".$Booking."'");
+      if (!empty($tugas7)) {
+        $waktuTugas7 = strtotime($tugas7["waktu"]);
+        task($kodeBooking, "7",$waktuTugas7);
+      }
+      $tugas99 = tampil("SELECT NOW() AS waktu FROM reg_periksa WHERE stts='Batal' AND no_rawat= '".$Booking."'");
+      if (!empty($tugas99)) {
+        $waktuTugas99 = strtotime($tugas99["waktu"]);
+        task($kodeBooking, "99",$waktuTugas99);
+      }    
     }else{
       echo "<script>console.log('Terdapat Duplikasi Input NON JKN');</script>";
     }
