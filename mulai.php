@@ -1,6 +1,6 @@
 <?php
 include 'tambah.php';
-include 'task.php';
+//include 'task.php';
 setlocale(LC_ALL, 'IND');
 $tanggal            = date("Y-m-d");
 $hariKerja          = strtoupper(strftime('%A'));
