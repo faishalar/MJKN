@@ -61,9 +61,6 @@ function tampil($queri)
 {
   global $koneksi;
   $data = mysqli_query($koneksi, $queri);
-  $tampung = [];
-  while ($kolom = mysqli_fetch_assoc($data)) {
-    $tampung[] = $kolom;
-  }
-  return $tampung;
+  $tampil = mysqli_fetch_assoc($queri);
+  return $tampil;
 }
