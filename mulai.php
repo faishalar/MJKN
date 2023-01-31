@@ -70,8 +70,10 @@ while ($data = mysqli_fetch_assoc($peserta)) {
   //echo $hasilakhir;
 
   $tampilkan = json_decode($hasilakhir, true);
+  $code  = $data2["metadata"]["code"];
+  $pesan  = $data2["metadata"]["message"];
 
-  if (!empty($tampilkan)) {
+  if ($code == "200") {
     $noKunjungan = $tampilkan["rujukan"]["noKunjungan"];
     /*echo $nomorpeserta."<br>";
     echo $noKunjungan."<br>";
@@ -156,71 +158,8 @@ while ($data = mysqli_fetch_assoc($peserta)) {
 
     if ($nilairespon2 == "200") {
       echo "<script>console.log('Mobile JKN : " . $nilairespon2 . " : " . $nilairespon3 . "');</script>";
-    } else {
-      $curl2 = curl_init();
-
-      curl_setopt_array($curl2, array(
-        CURLOPT_URL => 'https://apijkn.bpjs-kesehatan.go.id/antreanrs/antrean/add',
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => '',
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 0,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => 'POST',
-        CURLOPT_POSTFIELDS => '{
-            "kodebooking": "' . $kodeBooking . '",
-            "jenispasien": "NON JKN",
-            "nomorkartu": "-",
-            "nik": "-",
-            "nohp": "' . $hp . '",
-            "kodepoli": "' . $kodePoli . '",
-            "namapoli": "' . $namaPoli . '",
-            "pasienbaru": ' . $statusDaftar . ',
-            "norm": "' . $rekamMedis . '",
-            "tanggalperiksa": "' . $tanggal . '",
-            "kodedokter": ' . $kodeDokterBPJS . ',
-            "namadokter": "' . $namaDokter . '",
-            "jampraktek": "' . $waktuAwal . "-" . $waktuAkhir . '",
-            "jeniskunjungan": 3,
-            "nomorreferensi": "-",
-            "nomorantrean": "' . $kodePoli . "-" . $nomorAntrian . '",
-            "angkaantrean": ' . $urutan . ',
-            "estimasidilayani": ' . $hadir . ',
-            "sisakuotajkn": ' . $sisa . ',
-            "kuotajkn": ' . $kuota . ',
-            "sisakuotanonjkn": ' . $sisa . ',
-            "kuotanonjkn": ' . $kuota . ',
-            "keterangan": "Peserta harap 30 menit lebih awal guna pencatatan administrasi."
-          }',
-        CURLOPT_HTTPHEADER => array(
-          "user_key:" . $userkey2,
-          "x-cons-id:" . $cons_id,
-          "x-signature:" . $encodeSignature,
-          "x-timestamp:" . $timestamp
-        ),
-      ));
-
-      $response2 = curl_exec($curl2);
-      $err2 = curl_error($curl2);
-
-      curl_close($curl2);
-
-      if ($err2) {
-        echo "cURL Error #:" . $err2;
-      } else {
-        //echo $response;
-      }
-      $data2        = json_decode($response2, true);
-      $kunci2      = $cons_id . $secret_key . $timestamp;
-      $nilairespon2  = $data2["metadata"]["code"];
-      $nilairespon3  = $data2["metadata"]["message"];
-      $hasilakhir2    = decompress(stringDecrypt($kunci2, $nilairespon2));
-      if($nilairespon2 == "200"){
-        echo "<script>console.log('JKN KE UMUM : " . $nilairespon2 . " : " . $nilairespon3 . "');</script>";     
-      }else{
-        echo "<script>console.log('Terdapat Duplikasi Input JKN');</script>";
-      }
+    }else{
+      echo "<script>console.log('terdapat duplikasi kode Mobile JKN : " . $kodeBooking "');</script>";
     }
     $tugas3 = tampil("SELECT dikirim FROM mutasi_berkas WHERE dikirim LIKE '" . $tanggal . " %' AND no_rawat= '".$Booking."'");
     if (!empty($tugas3)) {
@@ -317,7 +256,7 @@ while ($data = mysqli_fetch_assoc($peserta)) {
       echo "<script>console.log('NON JKN : " . $nilairespon4 . " : " . $nilairespon5 . "');</script>";     
       
     }else{
-      echo "<script>console.log('Terdapat Duplikasi Input NON JKN');</script>";
+      echo "<script>console.log('Terdapat Duplikasi NON JKN ".$Booking."');</script>";
     }
     $tugas3 = tampil("SELECT dikirim FROM mutasi_berkas WHERE dikirim LIKE '" . $tanggal . " %' AND no_rawat= '".$Booking."'");
       if (!empty($tugas3)) {
