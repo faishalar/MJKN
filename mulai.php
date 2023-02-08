@@ -160,61 +160,66 @@ while ($data = mysqli_fetch_assoc($peserta)) {
       echo "<script>console.log('Mobile JKN : " . $nilairespon2 . " : " . $nilairespon3 . "');</script>";
     }else{
       echo "<script>console.log('terdapat duplikasi kode Mobile JKN : " . $kodeBooking ."');</script>";
-    }
-    $tugas3 = tampil("SELECT dikirim FROM mutasi_berkas WHERE dikirim LIKE '" . $tanggal . " %' AND no_rawat= '".$Booking."'");
-    if (!empty($tugas3)) {
-      try{
-        $waktuTugas3 = strtotime($tugas3["dikirim"]);
-        task($kodeBooking, "3",$waktuTugas3);
+      $tugas3 = tampil("SELECT dikirim FROM mutasi_berkas WHERE dikirim LIKE '" . $tanggal . " %' AND no_rawat= '".$Booking."'");
+      if (!empty($tugas3)) {
+        try{
+          $waktuTugas3 = strtotime($tugas3["dikirim"]);
+          task($kodeBooking, "3",$waktuTugas3);
+        }
+        catch(Exception $e){
+          echo "<script>console.log('Pesan: ".$e->getMessage()."');</script>";
+        }
       }
-      catch(Exception $e){
-        echo "<script>console.log('Pesan: ".$e->getMessage()."');</script>";
+      $tugas4 = tampil("SELECT diterima FROM mutasi_berkas WHERE diterima LIKE '" . $tanggal . " %' AND no_rawat= '".$Booking."'");
+      if (!empty($tugas4)) {
+        try{
+          $waktuTugas4 = strtotime($tugas4["diterima"]);
+          task($kodeBooking, "4",$waktuTugas4);
+        }
+        catch(Exception $e){
+          echo "<script>console.log('Pesan: ".$e->getMessage()."');</script>";
+        }
       }
-    }
-    $tugas4 = tampil("SELECT diterima FROM mutasi_berkas WHERE diterima LIKE '" . $tanggal . " %' AND no_rawat= '".$Booking."'");
-    if (!empty($tugas4)) {
-      try{
-        $waktuTugas4 = strtotime($tugas4["diterima"]);
-        task($kodeBooking, "4",$waktuTugas4);
+      $tugas5 = tampil("SELECT CONCAT (tgl_perawatan,' ',jam_rawat) AS waktu FROM pemeriksaan_ralan WHERE no_rawat= '".$Booking."'");
+      if (!empty($tugas5)) {
+        try{
+          $waktuTugas5 = strtotime($tugas5["waktu"]);
+          task($kodeBooking, "5",$waktuTugas5);
+        }
+        catch(Exception $e){
+          echo "<script>console.log('Pesan: ".$e->getMessage()."');</script>"; 
+        }
       }
-      catch(Exception $e){
-        echo "<script>console.log('Pesan: ".$e->getMessage()."');</script>";
+      $tugas6 = tampil("SELECT CONCAT (tgl_peresepan,' ',jam_peresepan) AS waktu FROM resep_obat WHERE no_rawat= '".$Booking."'");
+      if (!empty($tugas6)) {
+        try{
+          $waktuTugas6 = strtotime($tugas6["waktu"]);
+          task($kodeBooking, "6",$waktuTugas6);
+        }
+        catch(Exception $e){
+          echo "<script>console.log('Pesan: ".$e->getMessage()."');</script>";
+        }
       }
-    }
-    $tugas5 = tampil("SELECT CONCAT (tgl_perawatan,' ',jam_rawat) AS waktu FROM pemeriksaan_ralan WHERE no_rawat= '".$Booking."'");
-    if (!empty($tugas5)) {
-      try{
-        $waktuTugas5 = strtotime($tugas5["waktu"]);
-        task($kodeBooking, "5",$waktuTugas5);
+      $tugas7 = tampil("SELECT CONCAT (tgl_perawatan,' ',jam) AS waktu FROM resep_obat WHERE no_rawat= '".$Booking."'");
+      if (!empty($tugas7)) {
+        try{
+          $waktuTugas7 = strtotime($tugas7["waktu"]);
+          task($kodeBooking, "7",$waktuTugas7);
+        }
+        catch(Exception $e){
+          echo "<script>console.log('Pesan: ".$e->getMessage()."');</script>";
+        }
       }
-      catch(Exception $e){
-        echo "<script>console.log('Pesan: ".$e->getMessage()."');</script>"; 
-      }
-    }
-    $tugas6 = tampil("SELECT CONCAT (tgl_peresepan,' ',jam_peresepan) AS waktu FROM resep_obat WHERE no_rawat= '".$Booking."'");
-    if (!empty($tugas6)) {
-      try{
-        $waktuTugas6 = strtotime($tugas6["waktu"]);
-        task($kodeBooking, "6",$waktuTugas6);
-      }
-      catch(Exception $e){
-        echo "<script>console.log('Pesan: ".$e->getMessage()."');</script>";
-      }
-    }
-    $tugas7 = tampil("SELECT CONCAT (tgl_perawatan,' ',jam) AS waktu FROM resep_obat WHERE no_rawat= '".$Booking."'");
-    if (!empty($tugas7)) {
-      try{
-        $waktuTugas7 = strtotime($tugas7["waktu"]);
-        task($kodeBooking, "7",$waktuTugas7);
-      }
-      catch(Exception $e){
-        echo "<script>console.log('Pesan: ".$e->getMessage()."');</script>";
-      }
-    }
-    $tugas99 = tampil("SELECT NOW() AS waktu FROM reg_periksa WHERE stts='Batal' AND no_rawat= '".$Booking."'");
-    if (!empty($tugas99)) {
-      $waktuTugas99 = strtotime($tugas99["waktu"]);
-      task($kodeBooking, "99",$waktuTugas99);
+      $tugas99 = tampil("SELECT NOW() AS waktu FROM reg_periksa WHERE stts='Batal' AND no_rawat= '".$Booking."'");
+      if (!empty($tugas99)) {
+        try{
+          $waktuTugas99 = strtotime($tugas99["waktu"]);
+          task($kodeBooking, "99",$waktuTugas99);
+        }
+        catch(Exception $e){
+          echo "<script>console.log('Pesan: ".$e->getMessage()."');</script>";
+        }
+      }    
     }    
   } else {
     //NON JKN
@@ -282,37 +287,67 @@ while ($data = mysqli_fetch_assoc($peserta)) {
       
     }else{
       echo "<script>console.log('Terdapat Duplikasi NON JKN ".$Booking."');</script>";
-    }
-    $tugas3 = tampil("SELECT dikirim FROM mutasi_berkas WHERE dikirim LIKE '" . $tanggal . " %' AND no_rawat= '".$Booking."'");
+      $tugas3 = tampil("SELECT dikirim FROM mutasi_berkas WHERE dikirim LIKE '" . $tanggal . " %' AND no_rawat= '".$Booking."'");
       if (!empty($tugas3)) {
-        $waktuTugas3 = strtotime($tugas3["dikirim"]);
-        task($kodeBooking, "3",$waktuTugas3);
+        try{
+          $waktuTugas3 = strtotime($tugas3["dikirim"]);
+          task($kodeBooking, "3",$waktuTugas3);
+        }
+        catch(Exception $e){
+          echo "<script>console.log('Pesan: ".$e->getMessage()."');</script>";
+        }
       }
       $tugas4 = tampil("SELECT diterima FROM mutasi_berkas WHERE diterima LIKE '" . $tanggal . " %' AND no_rawat= '".$Booking."'");
       if (!empty($tugas4)) {
-        $waktuTugas4 = strtotime($tugas4["diterima"]);
-        task($kodeBooking, "4",$waktuTugas4);
+        try{
+          $waktuTugas4 = strtotime($tugas4["diterima"]);
+          task($kodeBooking, "4",$waktuTugas4);
+        }
+        catch(Exception $e){
+          echo "<script>console.log('Pesan: ".$e->getMessage()."');</script>";
+        }
       }
       $tugas5 = tampil("SELECT CONCAT (tgl_perawatan,' ',jam_rawat) AS waktu FROM pemeriksaan_ralan WHERE no_rawat= '".$Booking."'");
       if (!empty($tugas5)) {
-        $waktuTugas5 = strtotime($tugas5["waktu"]);
-        task($kodeBooking, "5",$waktuTugas5);
+        try{
+          $waktuTugas5 = strtotime($tugas5["waktu"]);
+          task($kodeBooking, "5",$waktuTugas5);
+        }
+        catch(Exception $e){
+          echo "<script>console.log('Pesan: ".$e->getMessage()."');</script>";
+        }
       }
       $tugas6 = tampil("SELECT CONCAT (tgl_peresepan,' ',jam_peresepan) AS waktu FROM resep_obat WHERE no_rawat= '".$Booking."'");
       if (!empty($tugas6)) {
-        $waktuTugas6 = strtotime($tugas6["waktu"]);
-        task($kodeBooking, "6",$waktuTugas6);
+        try{
+          $waktuTugas6 = strtotime($tugas6["waktu"]);
+          task($kodeBooking, "6",$waktuTugas6);
+        }
+        catch(Exception $e){
+          echo "<script>console.log('Pesan: ".$e->getMessage()."');</script>";
+        }
       }
       $tugas7 = tampil("SELECT CONCAT (tgl_perawatan,' ',jam) AS waktu FROM resep_obat WHERE no_rawat= '".$Booking."'");
       if (!empty($tugas7)) {
-        $waktuTugas7 = strtotime($tugas7["waktu"]);
-        task($kodeBooking, "7",$waktuTugas7);
+        try{
+          $waktuTugas7 = strtotime($tugas7["waktu"]);
+          task($kodeBooking, "7",$waktuTugas7);
+        }
+        catch(Exception $e){
+          echo "<script>console.log('Pesan: ".$e->getMessage()."');</script>";
+        }
       }
       $tugas99 = tampil("SELECT NOW() AS waktu FROM reg_periksa WHERE stts='Batal' AND no_rawat= '".$Booking."'");
       if (!empty($tugas99)) {
-        $waktuTugas99 = strtotime($tugas99["waktu"]);
-        task($kodeBooking, "99",$waktuTugas99);
-      }    
+        try{
+          $waktuTugas99 = strtotime($tugas99["waktu"]);
+          task($kodeBooking, "99",$waktuTugas99);
+        }
+        catch(Exception $e){
+          echo "<script>console.log('Pesan: ".$e->getMessage()."');</script>";
+        }
+      }
+    }    
   }
 }
 
