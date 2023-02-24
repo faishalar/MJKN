@@ -157,7 +157,7 @@ while ($data = mysqli_fetch_assoc($peserta)) {
 
 
     if ($nilairespon2 == "200") {
-      echo "<script>console.log('Mobile JKN : " . $nilairespon2 . " : " . $nilairespon3 . "');</script>";
+      echo "<script>console.log('Mobile JKN : ".$kodeBooking." " . $nilairespon2 . " : " . $nilairespon3 . "');</script>";
     }else{
       echo "<script>console.log('terdapat duplikasi kode Mobile JKN : " . $kodeBooking ."');</script>";
       $tugas3 = tampil("SELECT dikirim FROM mutasi_berkas WHERE dikirim LIKE '" . $tanggal . " %' AND no_rawat= '".$Booking."'");
@@ -283,7 +283,7 @@ while ($data = mysqli_fetch_assoc($peserta)) {
     $nilairespon5  = $data3["metadata"]["message"];
     $hasilakhir3    = decompress(stringDecrypt($kunci3, $nilairespon4));
     if($nilairespon4 == "200"){
-      echo "<script>console.log('NON JKN : " . $nilairespon4 . " : " . $nilairespon5 . "');</script>";     
+      echo "<script>console.log('NON JKN : " .$Booking." ". $nilairespon4 . " : " . $nilairespon5 . "');</script>";     
       
     }else{
       echo "<script>console.log('Terdapat Duplikasi NON JKN ".$Booking."');</script>";
